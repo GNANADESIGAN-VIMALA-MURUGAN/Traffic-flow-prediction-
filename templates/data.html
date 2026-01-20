@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data-Based Traffic Prediction</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md py-4">
+        <div class="max-w-6xl mx-auto flex justify-between px-6">
+            <a href="{{ url_for('home') }}" class="text-lg font-bold text-gray-700">Traffic Prediction</a>
+            <div>
+                <a href="{{ url_for('ai_based_prediction') }}" class="text-gray-700 px-4">AI-Based</a>
+                <a href="{{ url_for('data_based_prediction') }}" class="text-blue-500 px-4 font-semibold">Data-Based</a>
+                <a href="{{ url_for('login') }}" class="text-gray-700 px-4">Login</a>
+                <a href="{{ url_for('register') }}" class="text-gray-700 px-4">Register</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Form Container -->
+    <div class="flex justify-center items-center mt-10">
+        <div class="w-full max-w-md bg-white shadow-lg rounded-lg p-6">
+            <h2 class="text-2xl font-bold text-gray-700 text-center mb-4">Data-Based Traffic Prediction</h2>
+
+            <form id="traffic-form">
+                <label class="block text-gray-700">Select Date & Time:</label>
+                <input type="datetime-local" id="datetime" name="datetime" class="w-full p-3 border rounded-md mb-4">
+
+                <label class="block text-gray-700">Number of Junctions:</label>
+                <select id="junction" name="junction" class="w-full p-3 border rounded-md mb-4">
+                    <option value="" disabled selected>Select a junction</option>
+                    {% for i in range(1, 5) %}
+                        <option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                </select>
+
+                <button type="submit" class="w-full bg-blue-500 text-white py-3 rounded-md hover:bg-blue-600">
+                    Predict Traffic
+                </button>
+            </form>
+
+            <div id="prediction-result" class="mt-4 text-center text-lg font-semibold text-red-600"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("traffic-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            
+            const datetime = document.getElementById("datetime").value;
+            const junction = document.getElementById("junction").value;
+
+            fetch("/predict-traffic", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `datetime=${datetime}&junction=${junction}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById("prediction-result").innerText = "Error: " + data.error;
+                } else {
+                    document.getElementById("prediction-result").innerText = "Predicted Vehicles: " + data.prediction;
+                }
+            })
+            .catch(error => console.error("Error fetching traffic prediction:", error));
+        });
+    </script>
+
+</body>
+</html>

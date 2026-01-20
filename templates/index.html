@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traffic Prediction Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md py-4">
+        <div class="max-w-6xl mx-auto flex justify-between px-6">
+            <a href="{{ url_for('home') }}" class="text-lg font-bold text-gray-700">Traffic Prediction</a>
+            <div>
+                <a href="{{ url_for('ai_based_prediction') }}" class="text-gray-700 px-4">AI-Based</a>
+                <a href="{{ url_for('data_based_prediction') }}" class="text-gray-700 px-4">Data-Based</a>
+                
+                {% if current_user.is_authenticated %}
+                    <span class="text-gray-700 px-4">Welcome, {{ current_user.username }}</span>
+                    <a href="{{ url_for('logout') }}" class="text-red-500 px-4 font-semibold">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="text-gray-700 px-4">Login</a>
+                    <a href="{{ url_for('register') }}" class="text-gray-700 px-4">Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="flex flex-col items-center justify-center h-screen">
+        <h1 class="text-4xl font-bold text-gray-700 mb-6">Welcome to Traffic Prediction</h1>
+
+        <!-- AI-Based Prediction Button -->
+        <a href="{{ url_for('ai_based_prediction') }}" class="block bg-blue-500 text-white py-3 px-6 rounded-md mb-4 hover:bg-blue-600 transition">
+            AI-Based Prediction
+        </a>
+
+        <!-- Data-Based Prediction Button -->
+        <a href="{{ url_for('data_based_prediction') }}" class="block bg-green-500 text-white py-3 px-6 rounded-md mb-4 hover:bg-green-600 transition">
+            Data-Based Prediction
+        </a>
+    </div>
+
+</body>
+</html>
